@@ -1,6 +1,6 @@
 # age-validation-example
 
-This repository demonstrates a simple web-based age validation system using HTML, JavaScript, and Playwright for end-to-end testing. It includes a form where users can enter their age, with validation that ensures the age falls within a specified range (e.g., between 18 and 65).
+This repository demonstrates a simple web-based age validation system using HTML, JavaScript, and Playwright for end-to-end testing. It includes a form where users can enter their age, with validation that ensures the age falls within a specified range.
 
 ## Features
 
@@ -46,16 +46,39 @@ pip install -r requirements.txt
 ```
 
 3. Install Node.js dependencies
- ```bash
+
+```bash
 npm install
 ```
+
 4. Install Playwright
- ```bash
- npx playwright install
- ```
+
+```bash
+npx playwright install
+```
+
 5. Run the tests
+
 ```bash
 python src/run_playwright_tests.py
 ```
+
 6. View the report
+
 Open `playwright-report/index.html` in your browser to see the test results.
+
+
+
+## GitHub Actions
+
+This repository is set up to automatically run Playwright tests using GitHub Actions. The results are saved in the `playwright-report/` directory.
+
+
+## Testing Age Validation
+
+The local `index.html` page contains a form that asks for a user’s age. It validates that the input is within the specified range. If the age is invalid (either too low or too high), the user is prompted to enter a valid age.
+
+
+## Contributing
+
+If you'd like to contribute to this project, feel free to fork the repository and submit a pull request with your changes.
