@@ -1,0 +1,22 @@
+{
+  "name": "repository",
+  "version": "1.0.0",
+  "description": "Playwright-pytest hybrid suite",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "keywords": [
+    "playwright",
+    "pytest",
+    "automation",
+    "testing"
+  ],
+  "author": "EwelinaC",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.52.0",
+    "@types/node": "^22.15.3",
+    "typescript": "^5.8.3"
+  }
+}

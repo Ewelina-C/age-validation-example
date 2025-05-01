@@ -1,0 +1,14 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+
+# Node.js
+node_modules/
+playwright-report/
+test-results/
+
+# macOS
+.DS_Store
