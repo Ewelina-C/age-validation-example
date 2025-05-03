@@ -42,8 +42,8 @@ jobs:
       # Run Pytest with HTML report
       - name: Run Pytest with HTML report
         run: |
-          source venv/bin/activate
-          pytest --html=playwright-report/pytest-report.html --self-contained-html
+          ./venv/bin/python -m pytest --html=playwright-report/pytest-report.html --self-contained-html
+
 
       # Upload pytest HTML report as artifact
       - name: Upload Pytest HTML Report
