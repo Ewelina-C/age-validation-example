@@ -1,4 +1,4 @@
-name: Playwright Tests
+name: Playwright Tests with Pytest
 
 on: [push, pull_request]
 
@@ -6,28 +6,57 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
-    permissions:
-      contents: write
-      actions: write
-      id-token: write
-
     steps:
+  
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # Set up Node.js for Playwright installation
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: Install dependencies
+      # Set up Python for pytest
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      # Install Node dependencies
+      - name: Install Node dependencies
         run: npm ci
 
-      - name: Run Playwright tests
-        run: npx playwright test --reporter=html
+      # Install Python dependencies from requirements.txt
+      - name: Install Python dependencies
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+          pip install --upgrade pip
+          pip install -r requirements.txt
 
-      - name: Upload Playwright HTML report
+      # Install Playwright browsers
+      - name: Install Playwright browsers (Chromium & Firefox only)
+        run: npx playwright install --with-deps chromium firefox
+
+      # Run Pytest with HTML report
+      - name: Run Pytest with HTML report
+        run: |
+          source venv/bin/activate
+          pytest --html=playwright-report/pytest-report.html --self-contained-html
+
+      # Upload pytest HTML report as artifact
+      - name: Upload Pytest HTML Report
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-html-report
-          path: playwright-report
+          name: pytest-html-report
+          path: playwright-report/pytest-report.html
+
+      - name: Deploy report to external repository
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          deploy_key: ${{ secrets.DEPLOY_KEY }}
+          external_repository: Ewelina-C/test-results
+          publish_branch: gh-pages
+          publish_dir: playwright-report
+        
