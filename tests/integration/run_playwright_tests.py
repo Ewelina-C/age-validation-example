@@ -8,15 +8,15 @@ def run_playwright_tests():
     result = subprocess.run(
         [
             "npx", "playwright", "test",
-            "--reporter=json,html",
-            f"--output={os.path.dirname(REPORT_PATH)}"
+            "--reporter","json,html",
+           
         ],
         capture_output=True,
         text=True
     )
 
     # Only try to open the report if tests ran successfully
-    if result.returncode == 0:
+    if result.returncode == 0 and os.environ.get("CI") != "true":
         subprocess.run(["npx", "playwright", "show-report"])
 
     return result.returncode, result.stdout, result.stderr
