@@ -9,7 +9,8 @@ const testCases = [
 
 for (const { age, valid } of testCases) {
   test(`Age ${age} should ${valid ? 'pass' : 'fail'}`, async ({ page }) => {
-    await page.goto('https://ewelina-c.github.io/age-validation-example');
+    await page.goto('https://ewelina-c.github.io/age-validation-example/');
+    await page.pause(); 
     await page.fill('#age', age.toString());
     await page.click('#submit');
 
