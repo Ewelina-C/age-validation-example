@@ -7,27 +7,54 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-  
+      # Checkout source code
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Set up Node.js for Playwright installation
+      # Set up Node.js for Playwright
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      # Set up Python for pytest
+      # Set up Python
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.9'
 
+      # Cache pip dependencies
+      - name: Cache pip dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      # Cache Playwright binaries
+      - name: Cache Playwright binaries
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-playwright-
+
+      # Cache Node modules
+      - name: Cache Node modules
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
+
       # Install Node dependencies
       - name: Install Node dependencies
         run: npm ci
 
-      # Install Python dependencies from requirements.txt
+      # Install Python dependencies
       - name: Install Python dependencies
         run: |
           python -m venv venv
@@ -35,23 +62,23 @@ jobs:
           pip install --upgrade pip
           pip install -r requirements.txt
 
-      # Install Playwright browsers
+      # Install only Chromium and Firefox for Playwright
       - name: Install Playwright browsers (Chromium & Firefox only)
         run: npx playwright install --with-deps chromium firefox
 
-      # Run Pytest with HTML report
+      # Run tests and generate pytest HTML report
       - name: Run Pytest with HTML report
         run: |
           ./venv/bin/python -m pytest --html=playwright-report/pytest-report.html --self-contained-html --timeout=30 --maxfail=1 -v
 
-
-      # Upload pytest HTML report as artifact
+      # Upload pytest HTML report as GitHub artifact
       - name: Upload Pytest HTML Report
         uses: actions/upload-artifact@v4
         with:
           name: pytest-html-report
           path: playwright-report/pytest-report.html
 
+      # Deploy HTML report to external GitHub Pages repo
       - name: Deploy report to external repository
         uses: peaceiris/actions-gh-pages@v4
         with:
@@ -59,4 +86,3 @@ jobs:
           external_repository: Ewelina-C/test-results
           publish_branch: gh-pages
           publish_dir: playwright-report
-        

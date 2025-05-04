@@ -8,15 +8,14 @@ def run_playwright_tests():
     result = subprocess.run(
         [
             "npx", "playwright", "test",
-            "--reporter","json,html",
-           
+            "--reporter", "json,html",
         ],
         capture_output=True,
         text=True
     )
 
-    # Only try to open the report if tests ran successfully
-    if result.returncode == 0 and os.environ.get("CI") != "true":
+    # Only show report when not in CI (skip to avoid timeouts in GitHub Actions)
+    if result.returncode == 0 and not os.environ.get("CI", "").lower() == "true":
         subprocess.run(["npx", "playwright", "show-report"])
 
     return result.returncode, result.stdout, result.stderr
