@@ -42,7 +42,7 @@ jobs:
       # Run Pytest with HTML report
       - name: Run Pytest with HTML report
         run: |
-          ./venv/bin/python -m pytest --html=playwright-report/pytest-report.html --self-contained-html
+          ./venv/bin/python -m pytest --html=playwright-report/pytest-report.html --self-contained-html --timeout=30 --maxfail=1 -v
 
 
       # Upload pytest HTML report as artifact
